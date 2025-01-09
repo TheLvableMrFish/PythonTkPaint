@@ -1,1 +1,2 @@
-on_alt_press
+
+def draw(e):
