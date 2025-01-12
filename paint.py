@@ -4,8 +4,11 @@ from tkinter import ttk
 # Global Var
 is_holding_left_click = False
 is_holding_right_click = False
-brush_size = 2
 is_alt_holding = False
+
+# Global Styling
+brush_size = 2
+brush_color = 'black'
 
 def on_left_click_press():
     global is_holding_left_click
@@ -36,7 +39,7 @@ def draw(e):
             y - (brush_size / 2), 
             x + (brush_size / 2), 
             y + (brush_size / 2)
-            ), fill='black',
+            ), fill=brush_color,
             outline='')
     if(is_holding_right_click):
         canvas.create_oval((
@@ -68,14 +71,36 @@ def brush_size_adjust(e):
     
     brush_size = max(0, min(brush_size, 50))
 
+def on_color_change(color):
+    global brush_color
+    brush_color = color
+
 # setup
 window = tk.Tk()
 window.geometry('800x600')
 window.title('Paint')
 
+# color canvas
+canvas_paint_options = tk.Canvas(window, bg='lightGray', bd=1, relief='solid', width=800, height=50)
+canvas_paint_options.pack()
+
 # canvas
-canvas = tk.Canvas(window, bg='white', width=800, height=600)
+canvas = tk.Canvas(window, bg='white', bd=0, relief='flat', width=800, height=550)
 canvas.pack()
+
+# Define colors and button info
+button_colors = ['black', 'red', 'orange', 'brown', 'green', 'yellow', 'blue', 'gray']
+text_color = ['white', 'white', 'white', 'white', 'white', 'black', 'white', 'white']
+num_buttons = len(button_colors)
+button_width = 800 / (num_buttons * 2)
+spacing = (800 - num_buttons * button_width + button_width) / (num_buttons + 1)
+
+# Create color buttons
+for i in range(num_buttons):
+    x_position = (i + 1) * spacing + i * button_width
+
+    button = tk.Button(window, text=f'{button_colors[i]}', width=8, height=2, bg=button_colors[i], fg=text_color[i], command=lambda i=i: on_color_change(button_colors[i]))
+    canvas_paint_options.create_window(x_position, 28, window=button)
 
 # event
 canvas.bind('<Motion>', lambda e: draw(e))
