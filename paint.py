@@ -10,6 +10,7 @@ is_alt_holding = False
 brush_size = 2
 brush_color = 'black'
 
+
 def on_left_click_press():
     global is_holding_left_click
     is_holding_left_click = True
@@ -61,15 +62,22 @@ def on_alt_release():
 def brush_size_adjust(e):
     global brush_size
     global is_alt_holding
+    global brush_size_scroller
     
     if is_alt_holding:
 
-        if e.delta > 0:
+        if e.delta > 0 and brush_size < 25:
             brush_size += 1
-        else:
+        elif e.delta < 0 and brush_size > 0:
             brush_size -= 1
+        print(brush_size)
     
     brush_size = max(0, min(brush_size, 50))
+    brush_size_scroller.set(brush_size)
+
+def brush_size_scroller_adjust(size):
+    global brush_size
+    brush_size = size
 
 def on_color_change(color):
     global brush_color
@@ -116,6 +124,19 @@ canvas.bind('<ButtonRelease-3>', lambda event: off_right_click_press())
 canvas.bind('<MouseWheel>', brush_size_adjust)
 window.bind('<Alt_L>', lambda e: on_alt_press())
 window.bind('<KeyRelease-Alt_L>', lambda e: on_alt_release())
+
+# Slider
+brush_size_scroller = tk.IntVar(value=2)
+
+scale = ttk.Scale(
+    canvas, 
+    command= lambda value: brush_size_scroller_adjust(brush_size_scroller.get()), 
+    from_=25, to=1,
+    length= 545,
+    orient= 'vertical',
+    variable=brush_size_scroller
+)
+scale.place(x=2)
 
 # run
 window.mainloop()
