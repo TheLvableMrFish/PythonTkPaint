@@ -87,6 +87,8 @@ def on_color_change(color):
 window = tk.Tk()
 window.geometry('800x600')
 window.title('Paint')
+window.iconbitmap('./media/paint.ico')
+
 
 # color canvas
 canvas_paint_options = tk.Canvas(window, bg='lightGray', bd=1, relief='solid', width=800, height=50)
