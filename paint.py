@@ -73,11 +73,12 @@ def brush_size_adjust(e):
         print(brush_size)
     
     brush_size = max(0, min(brush_size, 50))
-    brush_size_scroller.set(brush_size)
+    brush_size_scroller.set(int(float(brush_size)))
 
 def brush_size_scroller_adjust(size):
     global brush_size
     brush_size = size
+    brush_size_scroller.set(int(float(brush_size)))
 
 def on_color_change(color):
     global brush_color
@@ -89,13 +90,18 @@ window.geometry('800x600')
 window.title('Paint')
 window.iconbitmap('./media/paint.ico')
 
+color_frame = tk.Frame(window)
+canvas_frame = tk.Frame(window)
+brush_frame = tk.Frame(window)
+brush_label_frame = tk.Frame(brush_frame)
+brush_slider_frame = tk.Frame(brush_frame)
 
 # color canvas
-canvas_paint_options = tk.Canvas(window, bg='lightGray', bd=1, relief='solid', width=800, height=50)
+canvas_paint_options = tk.Canvas(color_frame, bg='lightGray', bd=1, relief='solid', width=800, height=40)
 canvas_paint_options.pack()
 
 # canvas
-canvas = tk.Canvas(window, bg='white', bd=0, relief='flat', width=800, height=550)
+canvas = tk.Canvas(canvas_frame, bg='white', bd=0, relief='flat', width=800, height=505)
 canvas.pack()
 
 # Define colors and button info
@@ -109,8 +115,8 @@ spacing = (800 - num_buttons * button_width + button_width) / (num_buttons + 1)
 for i in range(num_buttons):
     x_position = (i + 1) * spacing + i * button_width
 
-    button = tk.Button(window, text=f'{button_colors[i]}', width=8, height=2, bg=button_colors[i], fg=text_color[i], command=lambda i=i: on_color_change(button_colors[i]))
-    canvas_paint_options.create_window(x_position, 28, window=button)
+    button = tk.Button(window, text=f'{button_colors[i]}', width=8, height=1, bg=button_colors[i], fg=text_color[i], command=lambda i=i: on_color_change(button_colors[i]))
+    canvas_paint_options.create_window(x_position, 22, window=button)
 
 # event
 canvas.bind('<Motion>', lambda e: draw(e))
@@ -127,18 +133,40 @@ canvas.bind('<MouseWheel>', brush_size_adjust)
 window.bind('<Alt_L>', lambda e: on_alt_press())
 window.bind('<KeyRelease-Alt_L>', lambda e: on_alt_release())
 
-# Slider
+# Slider label
+
+
+
 brush_size_scroller = tk.IntVar(value=2)
 
-scale = ttk.Scale(
-    canvas, 
+brush_label_size = ttk.Label(brush_label_frame, textvariable=brush_size_scroller)
+brush_label_size.pack(side='right')
+
+brush_label = ttk.Label(brush_label_frame, text='Brush Size')
+brush_label.pack(side='right')
+
+
+# Slider
+
+
+brush_scale = ttk.Scale(
+    brush_slider_frame, 
     command= lambda value: brush_size_scroller_adjust(brush_size_scroller.get()), 
-    from_=25, to=1,
+    from_=1, to=25,
     length= 545,
-    orient= 'vertical',
+    orient= 'horizontal',
     variable=brush_size_scroller
 )
-scale.place(x=2)
+brush_scale.pack(side='left')
+
+
+
+color_frame.pack(side='top')
+brush_frame.pack(side='top')
+canvas_frame.pack(side='top', expand=True, fill='both')
+
+brush_label_frame.pack()
+brush_slider_frame.pack()
 
 # run
 window.mainloop()
