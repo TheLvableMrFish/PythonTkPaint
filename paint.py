@@ -108,19 +108,23 @@ window.configure(menu=menu)
 # Frames
 canvas_frame = tk.Frame(window)
 options_frame = tk.Frame(window)
+
 paint_brush_options = tk.Frame(options_frame)
-brush_frame = tk.Frame(paint_brush_options)
+
 brush_color_frame = tk.Frame(paint_brush_options)
-color_frame = tk.Frame(options_frame)
+
+brush_frame = tk.Frame(paint_brush_options)
 brush_label_frame = tk.Frame(brush_frame)
 brush_slider_frame = tk.Frame(brush_frame)
+
+color_frame = tk.Frame(options_frame)
 
 # canvas
 canvas = tk.Canvas(canvas_frame, bg='white', bd=0, relief='flat', width=800, height=505)
 canvas.pack()
 
 # Define colors and button info
-button_colors = ['black', 'red', 'orange', 'brown', 'green', 'yellow', 'blue', 'gray', 'purple', 'cyan', 'white', 'pink']
+button_colors = ['black', 'red', 'orange', 'brown', 'green', 'yellow', 'blue', 'gray', 'purple', 'cyan', 'white', 'pink', 'gray', 'skyblue']
 num_buttons = len(button_colors)
 
 color_frame.columnconfigure((0,1,2,3,4,5), weight=1, uniform='a')
@@ -150,11 +154,11 @@ window.bind('<KeyRelease-Alt_L>', lambda e: on_alt_release())
 # Slider label
 brush_size_scroller = tk.IntVar(value=2)
 
-brush_label_size = ttk.Label(brush_label_frame, textvariable=brush_size_scroller)
-brush_label_size.pack(side='right')
+# brush_label_size = ttk.Label(brush_label_frame, textvariable=brush_size_scroller)
+# brush_label_size.pack(side='right')
 
 brush_label = ttk.Label(brush_label_frame, text='Brush Size')
-brush_label.pack(side='right')
+brush_label.pack(expand=True, fill='both')
 
 # paint brush color
 paint_brush_color1 = ttk.Label(brush_color_frame,text='', background='black', relief='solid')
@@ -166,19 +170,17 @@ paint_brush_color2.pack(side='left', expand=True, fill='both', padx=5, pady=5)
 brush_scale = ttk.Scale(
     brush_slider_frame, 
     command= lambda value: brush_size_scroller_adjust(brush_size_scroller.get()), 
-    from_=1, to=25,
+    from_=2, to=25,
     orient= 'horizontal',
     variable=brush_size_scroller
 )
-brush_scale.pack(side='left')
-
-
+brush_scale.pack(expand=True, fill='both')
 
 brush_frame.pack(side='left', expand=True, fill='both')
 color_frame.pack(side='right', expand=True, fill='both')
 
 brush_label_frame.pack()
-brush_slider_frame.pack()
+brush_slider_frame.pack(expand=True, fill='both', padx=8)
 
 brush_color_frame.pack(side='left', expand=True, fill='both')
 paint_brush_options.pack(side='left',expand=True, fill='both')
